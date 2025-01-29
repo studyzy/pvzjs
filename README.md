@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">植物大战僵尸-JavaScript在线版</h1>
-<p align="center"><strong>使用纯html+css+javascript<br><em>持续更新 ing～</em></strong></p>
+<p align="center"><strong>使用纯html+css+javascript编写的植物大战僵尸（魔改版）。。。<br><em>持续更新 ing～</em></strong></p>
 
 <div align="center">
     <a href="https://www.weilanx.com/"><img src="https://img.shields.io/badge/个人博客-蔚蓝-orange.svg?style=plasticr"></a>
