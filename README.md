@@ -16,16 +16,18 @@
     
 </div>
 
+
+
+## 项目介绍
+
+植物大战僵尸（魔改版）是基于纯 `html` + `css` + `javascript` 编写的，能够实现在浏览器中直接运行。此版本保留了原版植物大战僵尸的风格，绝对原汁原味。并在此基础上增添许多新的东西，包括但不限于**杂交植物**、**变异僵尸**、**中国馆**、**特色迷你小游戏**等等。
+
 ## 项目导航
 
 - **快速体验地址**：[植物大战僵尸魔改版（online）](https://azure12355.github.io/game-plant-vs-zombies/) 即开即玩
 - **项目仓库**：[game-plant-vs-zombies](https://github.com/Azure12355/game-plant-vs-zombies)
 - **原始项目仓库地址**：[New-Plants-vs-Zombies-JavaScript](https://github.com/jiangnangame/New-Plants-vs-Zombies-JavaScript) 原始的植物大战僵尸-JavaScript版由江南游戏开发社开发
 - **码云仓库**：[Gitee](https://github.com/Azure12355/game-plant-vs-zombies)（国内访问速度更快）
-
-## 项目介绍
-
-植物大战僵尸（魔改版）是基于纯 `html` + `css` + `javascript` 编写的，能够实现在浏览器中直接运行。此版本保留了原版植物大战僵尸的风格，绝对原汁原味。并在此基础上增添许多新的东西，包括但不限于**杂交植物**、**变异僵尸**、**中国馆**、**特色迷你小游戏**等等。
 
 ## 项目启动
 1. 克隆项目源码
