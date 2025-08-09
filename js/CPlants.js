@@ -940,6 +940,61 @@ var CPlants = NewO({
             }, [a.id, b - 40, b - 20, GetY(a.R)])
         }
     }),
+    oSunflowerPea = InheritO(oSunFlower, {
+        EName: "oSunflowerPea",
+        CName: "向日葵豌豆",
+        Tooltip: "不仅可以产生☀️，还可以射出豌豆",
+        width: 83,
+        height: 84,
+        beAttackedPointR: 63,
+        SunNum: 150,
+        PrivateBirth: function(a) {
+            a.BulletEle = NewImg(0, "images/Plants/PB00.gif", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
+
+            oS.ProduceSun ? oSym.addTask(500, function(d, c, b) {
+                $P[d] && (a.ChangePosition($(d), 1), oSym.addTask(100, function(h, g, f, e) {
+                    $P[h] && (AppearSun(Math.floor(g + Math.random() * 41), f, 50, 0),
+                        AppearSun(Math.floor(h + Math.random() * 21), f, 50, 0),
+                        AppearSun(Math.floor(h + Math.random() * 31), f, 50, 0),
+                        AppearSun(Math.floor(h + Math.random() * 11), f, 50, 0),
+                        AppearSun(Math.floor(h + Math.random() * 51), f, 50, 0),
+                        oSym.addTask(100, function(i) {
+                            $P[i] && a.ChangePosition($(i), 0)
+                        }, [h]), oSym.addTask(2400, e, [h, g, f]))
+                }, [d, c, b, arguments.callee]))
+            }, [a.id, GetX(a.C) - 40, GetY(a.R)]) : a.getHurt = function(f, c, b) {
+                var e = this;
+                switch (c) {
+                    case 0:
+                        var d = e.HP -= b;
+                        !(d % 100) && (AppearSun(Math.floor(GetX(e.C) - 40 + Math.random() * 41), GetY(e.R), 25, 0), oSym.addTask(50, function(h, g) {
+                            AppearSun(Math.floor(GetX(h) - 40 + Math.random() * 41), GetY(g), 25, 0)
+                        }, [e.C, e.R]), d < 1 ? e.Die() : oSym.addTask(50, function(h, g) {
+                            AppearSun(Math.floor(GetX(h) - 40 + Math.random() * 41), GetY(g), 25, 0)
+                        }, [e.C, e.R]));
+                        break;
+                    case 3:
+                        (e.HP -= b) < 1 && e.Die();
+                        break;
+                    default:
+                        e.Die(1)
+                }
+            }
+        },
+        NormalAttack: function() {
+            pea(this);
+        },
+        InitTrigger: function(c, b, f, a, h, g) {
+            var j = {},
+                i = c.getTriggerR(f),
+                e = i[0],
+                d = i[1];
+            do {
+                oT.add(e, j[e] = c.getTriggerRange(e, h, g), b)
+            } while (e++ != d);
+            c.oTrigger = j
+        }
+    }),
     oPumpkinHead = InheritO(CPlants, {
         EName: "oPumpkinHead",
         CName: "南瓜头",
@@ -1747,7 +1802,7 @@ var CPlants = NewO({
         height: 114,
         beAttackedPointR: 70,
         SunNum: 150,
-        AudioArr: ["bigchomp"],
+        AudioArr: ["chomp"],
         PicArr: ["images/Card/Plants/Chomper.png", "images/Plants/Chomper/0.gif", "images/Plants/Chomper/Chomper.gif", "images/Plants/Chomper/ChomperAttack.gif", "images/Plants/Chomper/ChomperDigest.gif"],
         Tooltip: "能一口气吞下一只僵尸, 但处于咀嚼状态中十分脆弱",
         Produce: '大嘴花可以一口吞掉一整只僵尸，但是他们消</font><br>化僵尸的时候很脆弱。<p>伤害：<font color="#FF0000">巨大</font><br>范围：<font color="#FF0000">非常近</font><br>特点：<font color="#FF0000">消化时间很长</font></p>大嘴花几乎可以去“恐怖小店”，来表演它的绝</font><br>技了，不过他的经纪人压榨了他太多的钱，所</font><br>以他没去成。尽管如此，大嘴花没有怨言，只</font><br>说了句这只是交易的一部分。',
@@ -1769,21 +1824,7 @@ var CPlants = NewO({
             return a.Altitude == 1 && a.beAttacked
         },
         NormalAttack: function(a, b) {
-            $(a).childNodes[1].src = "images/Plants/Chomper/ChomperAttack.gif" + $Random + Math.random();
-            oSym.addTask(70, function(c, d) {
-                PlayAudio("bigchomp");
-                $P[c] && oSym.addTask(18, function(e, f) {
-                    var g = $P[e],
-                        h;
-                    g && ((h = $Z[f]) && h.beAttacked && h.PZ ? $(e).childNodes[1].src = h.getRaven(e) ? (oSym.addTask(4200, function(i) {
-                        var j = $P[i];
-                        j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
-                    }, [e]), "images/Plants/Chomper/ChomperDigest.gif") : (g.canTrigger = 1, "images/Plants/Chomper/Chomper.gif") : oSym.addTask(18, function(i) {
-                        var j = $P[i];
-                        j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
-                    }, [e]))
-                }, [c, d])
-            }, [a, b])
+            eatFlower(a,b);
         }
     }),
     oBigChomper = InheritO(oChomper, {
@@ -1796,7 +1837,7 @@ var CPlants = NewO({
         NormalAttack: function(a, b) {
             $(a).childNodes[1].src = "images/Plants/BigChomper/ChomperAttack.gif" + $Random + Math.random();
             oSym.addTask(70, function(c, d) {
-                PlayAudio("bigchomp");
+                PlayAudio("chomp");
                 $P[c] && oSym.addTask(9, function(e, f) {
                     var g = $P[e],
                         h;
@@ -3239,3 +3280,42 @@ oCactus = InheritO(CPlants, {
     PicArr: ["images/interface/Shovel/0.gif", "images/interface/Shovel/0.gif"],
     Tooltip: "铲子可以移除植物！"
 });
+function pea(a) {
+        b = "PB" + Math.random();
+    EditEle(a.BulletEle.cloneNode(false), {
+        id: b
+    }, 0, EDPZ);
+    oSym.addTask(15, function(d) {
+        var c = $(d);
+        c && SetVisible(c)
+    }, [b]);
+    oSym.addTask(1, function(f, j, h, c, n, i, m, k, o, g) {
+        var l, e = GetC(n),
+            d = oZ["getZ" + c](n, i);
+        m == 0 && g[i + "_" + e] && k != e && (PlayAudio("firepea"), m = 1, h = 40, k = e, j.src = "images/Plants/PB" + m + c + ".gif");
+        d && d.Altitude == 1 ? (d[{
+            "-1": "getSnowPea",
+            0: "getPea",
+            1: "getFirePea"
+        } [m]](d, h, c), SetStyle(j, {
+            left: o + 28 + "px"
+        }).src = ["images/Plants/PeaBulletHit.gif", "images/Plants/PeaBulletHit2.gif"][m], oSym.addTask(10, ClearChild, [j])) : (n += l = !c ? 5 : -5) < oS.W && n > 100 ? (j.style.left = (o += l) + "px", oSym.addTask(1, arguments.callee, [f, j, h, c, n, i, m, k, o, g])) : ClearChild(j)
+    }, [b, $(b), 20, 0, a.AttackedLX, a.R, 0, 0, a.AttackedLX - 40, oGd.$Torch])
+}
+function eatFlower(a, b) {
+    $(a).childNodes[1].src = "images/Plants/Chomper/ChomperAttack.gif" + $Random + Math.random();
+    oSym.addTask(70, function(c, d) {
+        PlayAudio("chomp");
+        $P[c] && oSym.addTask(18, function(e, f) {
+            var g = $P[e],
+                h;
+            g && ((h = $Z[f]) && h.beAttacked && h.PZ ? $(e).childNodes[1].src = h.getRaven(e) ? (oSym.addTask(4200, function(i) {
+                var j = $P[i];
+                j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
+            }, [e]), "images/Plants/Chomper/ChomperDigest.gif") : (g.canTrigger = 1, "images/Plants/Chomper/Chomper.gif") : oSym.addTask(18, function(i) {
+                var j = $P[i];
+                j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
+            }, [e]))
+        }, [c, d])
+    }, [a, b])
+}
