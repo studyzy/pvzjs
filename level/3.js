@@ -1,5 +1,5 @@
 oS.Init({
-    PName: [oPeashooter, oSunFlower, oCherryBomb],
+    PName: [oPeashooter, oSunFlower,o4Sunflower,oSunflowerPea, oCherryBomb],
     ZName: [oZombie, oZombie2, oZombie3, oConeheadZombie],
     PicArr: function() {
         var a = oWallNut.prototype,

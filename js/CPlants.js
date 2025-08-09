@@ -849,7 +849,7 @@ var CPlants = NewO({
         Produce: '向日葵，为你生产额外阳光的经济作物。尝试</font><br>尽可能多种植吧！<p>阳光产量：<font color="#FF0000">中等</font></p>向日葵情不自禁地和着节拍起舞。是什么节拍</font><br>呢？嗨，是大地自己用来提神的爵士节拍，这</font><br>种频率的节拍，只有向日葵才能听到。',
         BirthStyle: function(c, e, b, a) {
             var d = b.childNodes[1];
-            d.src = "images/Plants/SunFlower/SunFlower.gif";
+            d.src = this.PicArr[3];
             d.style.clip = "rect(0,auto,74px,0)";
             d.style.height = "148px";
             EditEle(b, {
@@ -940,6 +940,57 @@ var CPlants = NewO({
             }, [a.id, b - 40, b - 20, GetY(a.R)])
         }
     }),
+    o4Sunflower = InheritO(oSunFlower, {
+        EName: "o4Sunflower",
+        CName: "四胞向日葵",
+        width: 83,
+        height: 84,
+        beAttackedPointR: 63,
+        SunNum: 50,
+        PicArr: ["images/Card/Plants/4Sunflower.png", "images/Plants/4Sunflower/0.gif", "images/Plants/4Sunflower/4Sunflower1.gif", "images/Plants/4Sunflower/4Sunflower.gif"],
+        Tooltip: "四胞向日葵的阳光产量是普通向日葵的四倍<br>",
+        Produce: '四胞向日葵的阳光产量是普通向日葵的四倍。<p>阳光产量：<font color="#FF0000">双倍<br>可以种在普通向日葵上</font></p>这是一个疯狂的夜晚，禁忌的科学技术，让双</font><br>胞向日葵来到了这个世界。电闪雷鸣狂风怒吼</font><br>，都在表示着这个世界对他的拒绝。但是一切</font><br>无济于事，双子向日葵他却仍然活着！',
+        CanGrow: function(c, b, f) {
+            var a = b + "_" + f,
+                d = c[1],
+                e = oS.ArP;
+            return e ? oGd.$LF[b] == 1 ? f > 0 && f < e.ArC[1] && !(oGd.$Crater[a] || oGd.$Tombstones[a] || d) : c[0] && !d : d && d.EName == "oSunFlower" ? 1 : oGd.$LF[b] == 1 ? !(f < 1 || f > 9 || oGd.$Crater[a] || oGd.$Tombstones[a] || d) : c[0] && !d
+        },
+        BirthStyle: function(c, e, b, a) {
+            var d = b.childNodes[1];
+            d.src = "images/Plants/4Sunflower/4Sunflower.gif";
+            d.style.clip = "rect(0,auto,84px,0)";
+            d.style.height = "168px";
+            EditEle(b, {
+                id: e
+            }, a, EDPZ)
+        },
+        ChangePosition: function(c, a) {
+            var b = c.childNodes[1];
+            a ? SetStyle(b, {
+                clip: "rect(84px,auto,auto,auto)",
+                top: "-84px"
+            }) : SetStyle(b, {
+                clip: "rect(auto,auto,84px,auto)",
+                top: 0
+            })
+        },
+        PrivateBirth: function(a) {
+            var b = GetX(a.C);
+            oSym.addTask(500, function(f, d, c, e) {
+                $P[f] && (a.ChangePosition($(f), 1), oSym.addTask(100, function(k, h, g, j, i) {
+                    AppearSun(Math.floor(h + Math.random() * 21), j, 50, 0),
+                    AppearSun(Math.floor(h + Math.random() * 21), j+40, 50, 0),
+                        AppearSun(Math.floor(g + Math.random() * 21), j, 50, 0),
+                        AppearSun(Math.floor(g + Math.random() * 21), j+40, 50, 0),
+                        oSym.addTask(100, function(l) {
+                        $P[l] && a.ChangePosition($(l), 0)
+                    }, [k]), oSym.addTask(2400, i, [k, h, g, j])
+                }, [f, d, c, e, arguments.callee]))
+            }, [a.id, b - 40, b - 20, GetY(a.R)])
+        }
+
+    }),
     oSunflowerPea = InheritO(oSunFlower, {
         EName: "oSunflowerPea",
         CName: "向日葵豌豆",
@@ -947,7 +998,8 @@ var CPlants = NewO({
         width: 83,
         height: 84,
         beAttackedPointR: 63,
-        SunNum: 150,
+        SunNum: 15,
+        PicArr: ["images/Card/Plants/SunFlowerPea.png", "images/Plants/SunFlowerPea/0.gif", "images/Plants/SunFlowerPea/SunFlower1.gif", "images/Plants/SunFlowerPea/SunFlower.gif"],
         PrivateBirth: function(a) {
             a.BulletEle = NewImg(0, "images/Plants/PB00.gif", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
 
