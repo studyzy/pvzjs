@@ -492,33 +492,13 @@ var CPlants = NewO({
         Tooltip: "向敌人射出豌豆",
         Produce: '豌豆射手，你的第一道防线。它们通过发射豌</font><br>豆来攻击僵尸。<p>伤害：<font color="#FF0000">中等</font></p>一棵植物，怎么能如此快地生长，并发射如此</font><br>多的豌豆呢？豌豆射手：“努力工作，奉献自</font><br>己，再加上一份阳光，高纤维和氧化碳均衡搭</font><br>配，这种健康早餐让一切成为可能。”',
         PrivateBirth: function(a) {
-            a.BulletEle = NewImg(0, a.PicArr[3], "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
+            a.BulletEle = NewImg(0, "images/Plants/PB00.gif", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
         },
         PrivateDie: function(a) {
             a.BulletEle = null
         },
         NormalAttack: function() {
-            var a = this,
-                b = "PB" + Math.random();
-            EditEle(a.BulletEle.cloneNode(false), {
-                id: b
-            }, 0, EDPZ);
-            oSym.addTask(15, function(d) {
-                var c = $(d);
-                c && SetVisible(c)
-            }, [b]);
-            oSym.addTask(1, function(f, j, h, c, n, i, m, k, o, g) {
-                var l, e = GetC(n),
-                    d = oZ["getZ" + c](n, i);
-                m == 0 && g[i + "_" + e] && k != e && (PlayAudio("firepea"), m = 1, h = 40, k = e, j.src = "images/Plants/PB" + m + c + ".gif");
-                d && d.Altitude == 1 ? (d[{
-                    "-1": "getSnowPea",
-                    0: "getPea",
-                    1: "getFirePea"
-                } [m]](d, h, c), SetStyle(j, {
-                    left: o + 28 + "px"
-                }).src = ["images/Plants/PeaBulletHit.gif", "images/Plants/PeaBulletHit2.gif"][m], oSym.addTask(10, ClearChild, [j])) : (n += l = !c ? 5 : -5) < oS.W && n > 100 ? (j.style.left = (o += l) + "px", oSym.addTask(1, arguments.callee, [f, j, h, c, n, i, m, k, o, g])) : ClearChild(j)
-            }, [b, $(b), 20, 0, a.AttackedLX, a.R, 0, 0, a.AttackedLX - 40, oGd.$Torch])
+           pea(this);
         }
     }),
     oLotusRoot = InheritO(oPeashooter, {
@@ -1877,6 +1857,22 @@ var CPlants = NewO({
         },
         NormalAttack: function(a, b) {
             eatFlower(a,b);
+        }
+    }),
+    oChomperPea = InheritO(oPeashooter, {
+        EName: "oChomperPea",
+        CName: "豌豆大嘴花",
+        PicArr: ["images/Card/Plants/ChomperPea.png", "images/Plants/ChomperPea/0.gif", "images/Plants/ChomperPea/Chomper.gif", "images/Plants/ChomperPea/ChomperAttack.gif", "images/Plants/ChomperPea/ChomperDigest.gif"],
+        Tooltip: "超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速度是普通大嘴花的50%",
+        Produce: '超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速</font><br>度是普通大嘴花的50%。<p>伤害：<font color="#FF0000">巨大</font><br>范围：<font color="#FF0000">非常近</font><br>特点：<font color="#FF0000">咀嚼时间短</font></p>超级大嘴花曾经是电视节目“超级大胃王”节</font><br>目的常客，但后来他被踢出了节目组，原因是</font><br>它的存在直接影响到观众的饮食量和节目收视</font><br>率。没办法，为了糊口他只得干起吞食僵尸行</font><br>动。',
+        NormalAttack: function(a, b) {
+            pea(this,function(a,d){
+                //如果距离够近调用eatFlower函数
+                if (Math.abs(a.AttackedLX - d.AttackedLX) < 100) {
+                    // 如果子弹击中僵尸且距离足够近，调用eatFlower函数
+                    eatFlower(a.id, d.id);
+                }
+            });
         }
     }),
     oBigChomper = InheritO(oChomper, {
@@ -3332,42 +3328,142 @@ oCactus = InheritO(CPlants, {
     PicArr: ["images/interface/Shovel/0.gif", "images/interface/Shovel/0.gif"],
     Tooltip: "铲子可以移除植物！"
 });
-function pea(a) {
-        b = "PB" + Math.random();
+// pea 函数：创建并控制豌豆射手发射的子弹
+// 参数 a: 发射子弹的植物对象
+function pea(a,shootedFn) {
+    // 为子弹生成随机ID
+    b = "PB" + Math.random();
+    var shooterX = a.pixelLeft;
+
+    // 克隆子弹元素并设置ID
+    // EditEle 函数用于编辑DOM元素属性
+    // a.BulletEle 是植物的子弹模板
     EditEle(a.BulletEle.cloneNode(false), {
         id: b
-    }, 0, EDPZ);
+    }, 0, EDPZ);  // EDPZ 可能是放置子弹的容器
+
+    // 15ms后使子弹可见
     oSym.addTask(15, function(d) {
-        var c = $(d);
-        c && SetVisible(c)
+        var c = $(d);  // 获取子弹DOM元素
+        c && SetVisible(c)  // 如果元素存在，则设为可见
     }, [b]);
+
+    // 1ms后开始子弹飞行逻辑
     oSym.addTask(1, function(f, j, h, c, n, i, m, k, o, g) {
-        var l, e = GetC(n),
-            d = oZ["getZ" + c](n, i);
-        m == 0 && g[i + "_" + e] && k != e && (PlayAudio("firepea"), m = 1, h = 40, k = e, j.src = "images/Plants/PB" + m + c + ".gif");
-        d && d.Altitude == 1 ? (d[{
-            "-1": "getSnowPea",
-            0: "getPea",
-            1: "getFirePea"
-        } [m]](d, h, c), SetStyle(j, {
-            left: o + 28 + "px"
-        }).src = ["images/Plants/PeaBulletHit.gif", "images/Plants/PeaBulletHit2.gif"][m], oSym.addTask(10, ClearChild, [j])) : (n += l = !c ? 5 : -5) < oS.W && n > 100 ? (j.style.left = (o += l) + "px", oSym.addTask(1, arguments.callee, [f, j, h, c, n, i, m, k, o, g])) : ClearChild(j)
-    }, [b, $(b), 20, 0, a.AttackedLX, a.R, 0, 0, a.AttackedLX - 40, oGd.$Torch])
+        var l, e = GetC(n),  // 获取列数
+            d = oZ["getZ" + c](n, i);  // 获取指定位置的僵尸
+        // 检查是否经过火炬树桩转化为火球
+        // m==0 表示普通豌豆，g[i + "_" + e]检查该位置是否有火炬树桩
+        // k!=e 确保只在第一次经过时转换
+        m == 0 && g[i + "_" + e] && k != e && (
+            PlayAudio("firepea"),  // 播放火球音效
+            m = 1,                 // m=1 表示火球
+            h = 40,                // 伤害提升到40
+            k = e,                 // 记录当前列
+            j.src = "images/Plants/PB" + m + c + ".gif"  // 更新为火球图片
+        );
+
+        // 检查是否击中僵尸
+        if (d && d.Altitude == 1) {  // Altitude==1 表示可被击中的僵尸
+            // 根据子弹类型调用不同的伤害函数
+            // m: -1=冰豌豆, 0=普通豌豆, 1=火豌豆
+            d[{
+                "-1": "getSnowPea",
+                "0": "getPea",
+                "1": "getFirePea"
+            }[m]](d, h, c);
+            if (shootedFn) {
+                shootedFn(a, d);  // 调用传入的回调函数，传递植物ID和僵尸ID
+            }
+            // 显示子弹击中效果并在10ms后移除
+            SetStyle(j, {
+                left: o + 28 + "px"  // 调整击中效果位置
+            }).src = ["images/Plants/PeaBulletHit.gif", "images/Plants/PeaBulletHit2.gif"][m];
+            oSym.addTask(10, ClearChild, [j]);
+        } else {
+            // 子弹继续飞行
+            // c为0表示向右飞行(正常方向)，为1表示向左飞行
+            n += l = !c ? 5 : -5;
+
+            // 检查子弹是否仍在有效范围内
+            if (n < oS.W && n > 100) {
+                // 更新子弹位置
+                j.style.left = (o += l) + "px";
+                // 递归调用自身，继续飞行
+                oSym.addTask(1, arguments.callee, [f, j, h, c, n, i, m, k, o, g]);
+            } else {
+                // 超出范围，移除子弹
+                ClearChild(j);
+            }
+        }
+    }, [
+        b,                    // 子弹ID
+        $(b),                 // 子弹DOM元素
+        20,                   // 初始伤害值
+        0,                    // 飞行方向，0=向右
+        a.AttackedLX,         // 子弹初始X坐标
+        a.R,                  // 子弹所在行
+        0,                    // 子弹类型，0=普通豌豆
+        0,                    // 记录经过火炬的列
+        a.AttackedLX - 40,    // 用于计算位置的初始值
+        oGd.$Torch            // 火炬树桩位置信息
+    ])
 }
 function eatFlower(a, b) {
+    // 参数 a: 大嘴花植物的ID
+    // 参数 b: 被攻击僵尸的ID
+
+    // 立即播放大嘴花攻击动画（张嘴准备吞食）
     $(a).childNodes[1].src = "images/Plants/Chomper/ChomperAttack.gif" + $Random + Math.random();
+
+    // 延迟70毫秒后执行吞食逻辑（等待攻击动画播放一段时间）
     oSym.addTask(70, function(c, d) {
+        // c: 大嘴花植物ID, d: 僵尸ID
+
+        // 播放"咀嚼"音效
         PlayAudio("chomp");
+
+        // 检查植物是否仍然存在
         $P[c] && oSym.addTask(18, function(e, f) {
-            var g = $P[e],
-                h;
-            g && ((h = $Z[f]) && h.beAttacked && h.PZ ? $(e).childNodes[1].src = h.getRaven(e) ? (oSym.addTask(4200, function(i) {
-                var j = $P[i];
-                j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
-            }, [e]), "images/Plants/Chomper/ChomperDigest.gif") : (g.canTrigger = 1, "images/Plants/Chomper/Chomper.gif") : oSym.addTask(18, function(i) {
-                var j = $P[i];
-                j && (j.canTrigger = 1, $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif")
-            }, [e]))
+            // e: 大嘴花植物ID, f: 僵尸ID
+
+            var g = $P[e],  // 获取大嘴花植物对象
+                h;          // 僵尸对象变量
+
+            // 如果大嘴花仍然存在
+            g && (
+                // 获取僵尸对象并检查其是否可被攻击且存在于场景中
+                (h = $Z[f]) && h.beAttacked && h.PZ ?
+                    // 僵尸存在且可被攻击的情况
+                    $(e).childNodes[1].src = h.getRaven(e) ?
+                        // 检查僵尸是否能被成功吞食（getRaven返回true表示被吞食）
+                        (
+                            // 僵尸被成功吞食，设置4200毫秒的消化时间
+                            oSym.addTask(4200, function(i) {
+                                var j = $P[i];  // 获取大嘴花对象
+                                // 消化完成后，恢复大嘴花的攻击能力和正常状态
+                                j && (
+                                    j.canTrigger = 1,  // 重新允许触发攻击
+                                    $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif"  // 恢复正常外观
+                                )
+                            }, [e]),
+                            "images/Plants/Chomper/ChomperDigest.gif"  // 显示消化中的动画
+                        ) :
+                        // 僵尸没有被成功吞食（可能有护甲等）
+                        (
+                            g.canTrigger = 1,  // 立即恢复攻击能力
+                            "images/Plants/Chomper/Chomper.gif"  // 恢复正常外观
+                        )
+                :
+                    // 僵尸不存在或无法攻击的情况，18毫秒后恢复大嘴花状态
+                    oSym.addTask(18, function(i) {
+                        var j = $P[i];
+                        j && (
+                            j.canTrigger = 1,  // 恢复攻击能力
+                            $(i).childNodes[1].src = "images/Plants/Chomper/Chomper.gif"  // 恢复正常外观
+                        )
+                    }, [e])
+            )
         }, [c, d])
     }, [a, b])
 }
