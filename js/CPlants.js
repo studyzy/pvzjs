@@ -686,6 +686,19 @@ var CPlants = NewO({
             }
         }
     }),
+    o3GatlingPea = InheritO(oThreepeater, {
+        EName: "o3GatlingPea",
+        CName: "三路机枪射手",
+        NormalAttack1: oThreepeater.prototype.NormalAttack,
+        NormalAttack: function(a) {
+            this.NormalAttack1();
+            oSym.addTask(5, function(d, b) {
+                var c = $P[d];
+                c && c.NormalAttack1();
+                --b && oSym.addTask(5, arguments.callee, [d, b])
+            }, [this.id, 3])
+        }
+    }),
     oGatlingPea = InheritO(oPeashooter, {
         EName: "oGatlingPea",
         CName: "机枪射手",
@@ -1873,6 +1886,31 @@ var CPlants = NewO({
                     eatFlower(a.id, d.id);
                 }
             });
+        }
+    }),
+    oMixChomperPea = InheritO(oPeashooter, {
+        EName: "oMixChomperPea",
+        CName: "豌豆大嘴花",
+        PicArr: ["images/Card/Plants/ChomperPea.png", "images/Plants/ChomperPea/0.gif", "images/Plants/ChomperPea/Chomper.gif", "images/Plants/ChomperPea/ChomperAttack.gif", "images/Plants/ChomperPea/ChomperDigest.gif"],
+        Tooltip: "超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速度是普通大嘴花的50%",
+        Produce: '超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速</font><br>度是普通大嘴花的50%。<p>伤害：<font color="#FF0000">巨大</font><br>范围：<font color="#FF0000">非常近</font><br>特点：<font color="#FF0000">咀嚼时间短</font></p>超级大嘴花曾经是电视节目“超级大胃王”节</font><br>目的常客，但后来他被踢出了节目组，原因是</font><br>它的存在直接影响到观众的饮食量和节目收视</font><br>率。没办法，为了糊口他只得干起吞食僵尸行</font><br>动。',
+        PrivateBirth: function(a) {
+            a.BulletEle = NewImg(0, "images/Plants/PB10.gif", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
+        },
+        NormalAttack1: oPeashooter.prototype.NormalAttack,
+        NormalAttack: function(a, b) {
+            pea(this,function(a,d){
+                //如果距离够近调用eatFlower函数
+                if (Math.abs(a.AttackedLX - d.AttackedLX) < 100) {
+                    // 如果子弹击中僵尸且距离足够近，调用eatFlower函数
+                    eatFlower(a.id, d.id);
+                }
+            });
+            oSym.addTask(10, function(d, b) {
+                var c = $P[d];
+                c && c.NormalAttack1();
+                --b && oSym.addTask(10, arguments.callee, [d, b])
+            }, [this.id, 10])
         }
     }),
     oBigChomper = InheritO(oChomper, {
@@ -3333,7 +3371,6 @@ oCactus = InheritO(CPlants, {
 function pea(a,shootedFn) {
     // 为子弹生成随机ID
     b = "PB" + Math.random();
-    var shooterX = a.pixelLeft;
 
     // 克隆子弹元素并设置ID
     // EditEle 函数用于编辑DOM元素属性
