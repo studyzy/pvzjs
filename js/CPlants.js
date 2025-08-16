@@ -510,9 +510,9 @@ var CPlants = NewO({
         SunNum: 100,
         BKind: 0,
         AudioArr: ["splat1", "splat2", "splat3", "plastichit", "shieldhit", "shieldhit2"],
-        PicArr: ["images/Card/Plants/PineTree.png", "images/Plants/PineTree/0.gif", "images/Plants/PineTree/PineTree.gif", "images/Plants/PineTree/PineCone.png", "images/Plants/PeaBulletHit.gif"],
-        Tooltip: "向敌人射出豌豆",
-        Produce: '豌豆射手，你的第一道防线。它们通过发射豌</font><br>豆来攻击僵尸。<p>伤害：<font color="#FF0000">中等</font></p>一棵植物，怎么能如此快地生长，并发射如此</font><br>多的豌豆呢？豌豆射手：“努力工作，奉献自</font><br>己，再加上一份阳光，高纤维和氧化碳均衡搭</font><br>配，这种健康早餐让一切成为可能。”',
+        PicArr: ["images/Card/Plants/PineTree.png", "images/Plants/PineTree/0.png", "images/Plants/PineTree/PineTree.gif", "images/Plants/PineTree/PineCone.png", "images/Plants/PeaBulletHit.gif"],
+        Tooltip: "向敌人射出松果",
+        Produce: '松果射手，你的第一道防线。它们通过发射豌</font><br>豆来攻击僵尸。<p>伤害：<font color="#FF0000">中等</font></p>一棵植物，怎么能如此快地生长，并发射如此</font><br>多的豌豆呢？豌豆射手：“努力工作，奉献自</font><br>己，再加上一份阳光，高纤维和氧化碳均衡搭</font><br>配，这种健康早餐让一切成为可能。”',
         PrivateBirth: function(a) {
             a.BulletEle = NewImg(0, "images/Plants/PineTree/PineCone.png", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
         },
