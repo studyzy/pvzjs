@@ -501,6 +501,50 @@ var CPlants = NewO({
            pea(this);
         }
     }),
+    oPineTree = InheritO(CPlants, {
+        EName: "oPineTree",
+        CName: "松果射手",
+        width: 71,
+        height: 71,
+        beAttackedPointR: 51,
+        SunNum: 100,
+        BKind: 0,
+        AudioArr: ["splat1", "splat2", "splat3", "plastichit", "shieldhit", "shieldhit2"],
+        PicArr: ["images/Card/Plants/PineTree.png", "images/Plants/PineTree/0.gif", "images/Plants/PineTree/PineTree.gif", "images/Plants/PineTree/PineCone.png", "images/Plants/PeaBulletHit.gif"],
+        Tooltip: "向敌人射出豌豆",
+        Produce: '豌豆射手，你的第一道防线。它们通过发射豌</font><br>豆来攻击僵尸。<p>伤害：<font color="#FF0000">中等</font></p>一棵植物，怎么能如此快地生长，并发射如此</font><br>多的豌豆呢？豌豆射手：“努力工作，奉献自</font><br>己，再加上一份阳光，高纤维和氧化碳均衡搭</font><br>配，这种健康早餐让一切成为可能。”',
+        PrivateBirth: function(a) {
+            a.BulletEle = NewImg(0, "images/Plants/PineTree/PineCone.png", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
+        },
+        PrivateDie: function(a) {
+            a.BulletEle = null
+        },
+        NormalAttack: function() {
+            pea(this);
+        }
+    }),
+    oWaterShooter = InheritO(CPlants, {
+        EName: "oWaterShooter",
+        CName: "水滴射手",
+        width: 71,
+        height: 71,
+        beAttackedPointR: 51,
+        SunNum: 100,
+        BKind: 0,
+        AudioArr: ["splat1", "splat2", "splat3", "plastichit", "shieldhit", "shieldhit2"],
+        PicArr: ["images/Card/Plants/WaterShooter.png", "images/Plants/WaterShooter/0.png", "images/Plants/WaterShooter/WaterShooter.gif", "images/Plants/Drop.png", "images/Plants/PeaBulletHit.gif"],
+        Tooltip: "向敌人射出水滴💧",
+        Produce: '豌豆射手，你的第一道防线。它们通过发射豌</font><br>豆来攻击僵尸。<p>伤害：<font color="#FF0000">中等</font></p>一棵植物，怎么能如此快地生长，并发射如此</font><br>多的豌豆呢？豌豆射手：“努力工作，奉献自</font><br>己，再加上一份阳光，高纤维和氧化碳均衡搭</font><br>配，这种健康早餐让一切成为可能。”',
+        PrivateBirth: function(a) {
+            a.BulletEle = NewImg(0, "images/Plants/Drop.png", "left:" + (a.AttackedLX - 40) + "px;top:" + (a.pixelTop + 3) + "px;visibility:hidden;z-index:" + (a.zIndex + 2))
+        },
+        PrivateDie: function(a) {
+            a.BulletEle = null
+        },
+        NormalAttack: function() {
+            pea(this);
+        }
+    }),
     oLotusRoot = InheritO(oPeashooter, {
         EName: "oLotusRoot",
         CName: "莲藕火箭炮",
@@ -741,7 +785,25 @@ var CPlants = NewO({
             }, [this.id, 3])
         }
     }),
-    oSplitPea = InheritO(oPeashooter, {
+    o5GatlingPea = InheritO(oPeashooter, {
+        EName: "o5GatlingPea",
+        CName: "五头机枪射手",
+        width: 88,
+        height: 84,
+        beAttackedPointR: 68,
+        SunNum: 275,
+        PicArr: ["images/Card/Plants/5GatlingPea.png", "images/Plants/5GatlingPea/0.png", "images/Plants/5GatlingPea/5GatlingPea.gif", "images/Plants/PB00.gif", "images/Plants/PeaBulletHit.gif"],
+        NormalAttack1: oPeashooter.prototype.NormalAttack,
+        NormalAttack: function(a) {
+            this.NormalAttack1();
+            oSym.addTask(15, function(d, b) {
+                var c = $P[d];
+                c && c.NormalAttack1();
+                --b && oSym.addTask(15, arguments.callee, [d, b])
+            }, [this.id, 19])
+        }
+    }),
+        oSplitPea = InheritO(oPeashooter, {
         EName: "oSplitPea",
         CName: "分裂射手",
         width: 92,
@@ -1890,7 +1952,7 @@ var CPlants = NewO({
     }),
     oMixChomperPea = InheritO(oPeashooter, {
         EName: "oMixChomperPea",
-        CName: "豌豆大嘴花",
+        CName: "超级豌豆大嘴花",
         PicArr: ["images/Card/Plants/ChomperPea.png", "images/Plants/ChomperPea/0.gif", "images/Plants/ChomperPea/Chomper.gif", "images/Plants/ChomperPea/ChomperAttack.gif", "images/Plants/ChomperPea/ChomperDigest.gif"],
         Tooltip: "超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速度是普通大嘴花的50%",
         Produce: '超级大嘴花能一口气吞下一只僵尸, 并且咀嚼速</font><br>度是普通大嘴花的50%。<p>伤害：<font color="#FF0000">巨大</font><br>范围：<font color="#FF0000">非常近</font><br>特点：<font color="#FF0000">咀嚼时间短</font></p>超级大嘴花曾经是电视节目“超级大胃王”节</font><br>目的常客，但后来他被踢出了节目组，原因是</font><br>它的存在直接影响到观众的饮食量和节目收视</font><br>率。没办法，为了糊口他只得干起吞食僵尸行</font><br>动。',

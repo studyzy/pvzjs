@@ -1082,6 +1082,24 @@ var CZombies = function(b, a) {
         },
         Produce: '橄榄球僵尸的表演秀。<p>韧性：<font color="#FF0000">极高</font><br>速度：<font color="#FF0000">快</font></p>在球场上，橄榄球僵尸表现出110%的激情，他进攻防守样样在行。虽然他完全不知道橄榄球是什么。'
     }),
+    oBigFootballZombie = InheritO(oFootballZombie, {
+        EName: "oBigFootballZombie",
+        CName: "巨型橄榄球僵尸",
+        OrnHP: 14000,
+        Lvl: 4,
+        SunNum: 175,
+        StandGif: 11,
+        width: 308,
+        height: 320,
+        OSpeed: 3.2,
+        Speed: 3.2,
+        beAttackedPointL: 40,
+        beAttackedPointR: 134,
+        PicArr: function() {
+            var a = "images/Zombies/BigFootballZombie/";
+            return ["images/Card/Zombies/BigFootballZombie.png", a + "0.gif", a + "FootballZombie.gif", a + "Attack.gif", a + "LostHead.gif", a + "LostHeadAttack.gif", "images/Zombies/Zombie/ZombieHead.gif" + $Random, a + "Die.gif" + $Random, "images/Zombies/BoomDie.gif" + $Random, a + "OrnLost.gif", a + "OrnLostAttack.gif", a + "1.gif"]
+        }(),
+    }),
     oHeiFootballZombie = InheritO(oFootballZombie, {
         EName: "oHeiFootballZombie",
         CName: "黑暗橄榄球僵尸",
@@ -3417,7 +3435,7 @@ oZZ = InheritO(OrnNoneZombies, {
     EName: "oZZ",
     CName: "怨灵僵尸",
     Lvl: 4,
-    HP: 500,
+    HP: 2500,
     StandGif: 9,
     OSpeed: 1.5,
     Speed: 1.5,
@@ -3436,7 +3454,7 @@ oZZ = InheritO(OrnNoneZombies, {
 }), oEmperor = InheritO(oCZombie, {
     EName: "oEmperor",
     CName: "秦始皇僵尸",
-    HP: 15e3,
+    HP: 15e4,
     width: 464,
     height: 364,
     beAttackedPointL: 140,
